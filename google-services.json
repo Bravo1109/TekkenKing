@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "972729071866",
+    "project_id": "vertep-app",
+    "storage_bucket": "vertep-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:972729071866:android:09976940d4215f94c2f143",
+        "android_client_info": {
+          "package_name": "androidoneandr.apk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "972729071866-3flhotukmvim9v3hq6c8vq2nbt4334m8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlJ4Q_g33UDldkX21scCnnmiWQaVT4DfI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "972729071866-3flhotukmvim9v3hq6c8vq2nbt4334m8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

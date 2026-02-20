@@ -1,0 +1,36 @@
+{
+  "cli": {
+    "version": ">= 3.2.1"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {
+        "image": "macos-sonoma-14.6-xcode-16.0",
+        "simulator": true
+      }
+    },
+    "preview2": {
+      "android": {
+        "gradleCommand": ":app:assembleRelease"
+      }
+    },
+    "preview3": {
+      "developmentClient": true
+    },
+    "production": {
+      "ios": {
+        "image": "macos-sonoma-14.6-xcode-16.0"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

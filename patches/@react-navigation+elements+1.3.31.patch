@@ -1,0 +1,8 @@
+diff --git a/node_modules/@react-navigation/elements/src/assets/back-icon@1.5x.android.png b/node_modules/@react-navigation/elements/src/assets/back-icon@1.5x.android.png
+deleted file mode 100644
+index ad03a63..0000000
+Binary files a/node_modules/@react-navigation/elements/src/assets/back-icon@1.5x.android.png and /dev/null differ
+diff --git a/node_modules/@react-navigation/elements/src/assets/back-icon@1.5x.ios.png b/node_modules/@react-navigation/elements/src/assets/back-icon@1.5x.ios.png
+deleted file mode 100644
+index 1fa30ec..0000000
+Binary files a/node_modules/@react-navigation/elements/src/assets/back-icon@1.5x.ios.png and /dev/null differ

@@ -1,0 +1,70 @@
+{
+  "expo": {
+    "name": "Score King",
+    "slug": "score-king-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/redpill.jpeg",
+    "userInterfaceStyle": "light",
+    "notification": {
+      "icon": "./assets/vertepNotif.png",
+      "color": "#000"
+    },
+    "splash": {
+      "image": "./assets/splash1.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#BE3B27"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/d051ac9f-5079-44d0-b542-dcd237319c98"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "icon": "./assets/redpill.jpeg",
+      "bundleIdentifier": "redpillios",
+      "buildNumber": "1"
+    },
+    "android": {
+      "googleServicesFile": "./google-services.json",
+      "useNextNotificationsApi": true,
+      "package": "androidoneandr.apk",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/redpill.jpeg",
+        "backgroundColor": "#BE3B27"
+      },
+      "icon": "./assets/redpill.jpeg",
+      "production": {
+        "android": {
+          "buildType": "app-bundle"
+        }
+      },
+      "versionCode": 1
+    },
+    "web": {
+      "favicon": "./assets/redpill.jpeg"
+    },
+    "owner": "flapptop",
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/vertepNotif.png",
+          "color": "#000"
+        }
+      ],
+      "expo-asset"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "eb80c1d5-5e39-491b-b5d2-905bbf11b3f2"
+      }
+    }
+  }
+}
