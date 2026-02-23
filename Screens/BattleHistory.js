@@ -153,6 +153,30 @@ function BattleHistory(props) {
       })
     }}
 
+    const createGame = (id) => {
+      if(!nextPageIsNull || currentPage === 1) {
+      setLoading(true)
+      fetch(`${BASE_URL}/api/two_game/create_game/${id}/`, {
+        method:"GET",
+        headers: {
+          'Authorization': `${token._j}`
+        }
+      }).then(resp => resp.json())
+      .then(res => {
+        console.log(res)
+        if (res.created == 1) {
+            clickedItem(res.game_pk)
+        }
+        setLoading(false)
+        // setLoadingChange(false)
+        // setLoadingProfiles(false)
+        // console.log(data)
+      })
+      .catch(error => {
+        console.log("Error", error)
+      })
+    }}
+
     const lobbyRefresh = () => {
     console.log('jabd')
     // if (!dialogFound) {
@@ -210,7 +234,7 @@ function BattleHistory(props) {
                 onPress = {() => {
                     setfModalFindMatch(false)
                     setLobbies(false)
-                    clickedItem(item)
+                    createGame(item.host.id)
                 }}
                 >
               <View style={{flexDirection:"row", alignItems: 'flex-start', height: 80}}>
