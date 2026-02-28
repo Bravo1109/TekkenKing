@@ -97,7 +97,8 @@ function BattleHistory(props) {
         } else if (res.is_exists == 0) {
           setQueue(false)
         } else if (res.is_exists == 2){
-        //   loadDialog()
+          setQueue(false)
+          clickedItem(res.pk)
         }
         setLoading(false)
         lobbyRefresh()
@@ -210,7 +211,7 @@ function BattleHistory(props) {
 
   const clickedItem = (item) => {
     if (item['navigate'] != '') {
-        props.navigation.navigate('BattleProcessStack', {data: item})
+        props.navigation.navigate('BattleProcessStack', {pk: item})
     }
   }
 
