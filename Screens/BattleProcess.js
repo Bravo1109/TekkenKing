@@ -27,6 +27,8 @@ const law5 = require('../images/fighters/law5.jpeg')
 const sohai1 = require('../images/fighters/sohai1.jpeg')
 const sohai2 = require('../images/fighters/sohai2.jpeg')
 const sohai3 = require('../images/fighters/sohai3.jpeg')
+const sohai4 = require('../images/fighters/sohai4.jpeg')
+const sohai5 = require('../images/fighters/sohai5.jpeg')
 
 
 function BattleProcess(props) {
@@ -317,7 +319,7 @@ function BattleProcess(props) {
                         width: SCREEN_HEIGHT / 2,
                         transform: [{rotateZ: '90deg'}],
                     }}
-                    source={law5}
+                    source={player2Score < 4 ? law1 : player2Score > 3 && player2Score < 8 ? law2 : player2Score > 7 && player2Score < 12 ? law3 : player2Score > 11 && player2Score < 16 ? law4 : law5}
                 />
                 <Text
                     style={{
@@ -368,7 +370,7 @@ function BattleProcess(props) {
                         borderLeftWidth: 1,
                         borderColor: '#fff'
                     }}
-                    source={sohai3}
+                    source={player1Score < 4 ? sohai1 : player1Score > 3 && player1Score < 8 ? sohai2 : player1Score > 7 && player1Score < 12 ? sohai3 : player1Score > 11 && player1Score < 16 ? sohai4 : sohai5}
                 />
                 <Text
                     style={{
