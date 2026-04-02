@@ -15,12 +15,14 @@ import { CommonActions } from '@react-navigation/native';
 import { openBrowserAsync } from 'expo-web-browser';
 import { getDefaultHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { FlashList } from '@shopify/flash-list';
 
 
 const tekkenBg = require('../images/tekkenTemple.jpeg')
 
 
 function BattleHistory(props) {
+  const flatListRef = useRef();
   getTokenData = async () => {
         try {
             tokenData = await AsyncStorage.getItem('token')
@@ -51,6 +53,8 @@ function BattleHistory(props) {
   const SCREEN_HEIGHT = Dimensions.get('window').height
   const [fontsLoaded, setfFontsLoaded] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [loadingHistory, setLoadingHistory] = useState(false)
+  const [historyData, setHistoryData] = useState([])
   const [queue, setQueue] = useState(false)
   const [modalFindMatch, setfModalFindMatch] = useState(false)
   const _loadFontsAsync = async () => {
@@ -82,6 +86,27 @@ function BattleHistory(props) {
     }
   }
 
+  const battleHistory = () => {
+      setLoadingHistory(true)
+      fetch(`${BASE_URL}/api/two_game_history/`, {
+          method:"GET",
+          headers: {
+          'Authorization': `${token._j}`
+          }
+      }).then(resp => resp.json())
+      .then(res => {
+          setLoadingHistory(false)
+          const uniqueData = [...historyData, ...res.results].filter((item, index, array) => {
+            return array.findIndex(t => t.id === item.id) === index;
+          });
+          setHistoryData(uniqueData)
+          lobbyAdded()
+      })
+      .catch(error => {
+          console.log("Error load data", error)
+      })
+    }
+ 
   const lobbyAdded = () => {
       console.log('added')
       clearTimeout(timerQueueRef.current)
@@ -129,7 +154,7 @@ function BattleHistory(props) {
         console.log("Error load data", error)
       })
     }
-
+ 
   const createLobby = () => {
       if(!nextPageIsNull || currentPage === 1) {
       setLoading(true)
@@ -222,9 +247,50 @@ function BattleHistory(props) {
   useEffect(() => {
       getTokenData()
       .then(() => {
-          lobbyAdded()
+        // lobbyAdded()
+        battleHistory()
       })
-    }, []);
+    }, [isFocused]);
+
+    const renderHistoryData = useCallback(({item, index}) => {
+      let message_pubD = new Date(moment(item.pub_date).toISOString())
+          return(
+            <TouchableOpacity 
+                style={[{ justifyContent: 'center', alignItems: 'center', marginBottom: 20}]}
+                contentStyle={{ width: '100%' }}
+                activeOpacity={0.8}
+                onPress = {() => {
+                    clickedItem(item.id)
+                }}
+                >
+              <Text style={styles.dateStyleMessages}>{format(message_pubD, 'dd MMM yyyy')}</Text>
+              <View style={[{flexDirection:"row", alignItems: 'flex-start', height: 140}]}>
+                {item.winner && <ImageBackground
+                  source={item.winner.photos.length == 0 ? item.winner.sex == 'male' ? require('../images/male.png') : require('../images/female.png') : {}}
+                  resizeMode='contain'
+                  style={{width: SCREEN_WIDTH - 40, height: 140, backgroundColor: '#0F1825',
+                     borderRadius: 30,}}
+                >
+                  {item.winner.photos.length > 0  && <ActivityIndicator
+                    style={{ position: 'absolute', height: '100%', width: '100%' }}
+                  />}
+                  {item.winner.photos.length > 0 ? <Image
+                    style={{width:'100%', height:'100%', borderRadius: 30}}
+                    cachePolicy={'disk'}
+                    source={{
+                      uri: `${BASE_URL}${item.winner.photos[0].compressed_image_url}`
+                    }}
+                      
+                  /> : <View></View> }
+                  <Text
+                    style={[{position: 'absolute', zIndex: 100, fontFamily: 'SftBold', fontSize: 45,
+                      left: -15, transform: [{rotateZ: '-45deg'}]}, item.is_winner ? {color: 'green'} : {color: 'tomato'}]}
+                  >{item.is_winner ? 'Win' : 'Loose'}</Text>
+                </ImageBackground>}
+              </View>
+            </TouchableOpacity>
+          )
+      }, [historyData])
 
     const renderUsersData = useCallback(({item, index}) => {
           return(
@@ -267,6 +333,33 @@ function BattleHistory(props) {
             </TouchableOpacity>
           )
       }, [usersData])
+
+      const keyExtractor = useCallback((item, index) => index.toString(), [])
+
+      const renderLoader = () => {
+          return (
+              <View style={loadingCircleStyle()}>
+                  <ActivityIndicator size='small' color='#aaa' />
+              </View>
+          )
+        }
+      
+        const LoadMoreItem = () => {
+          if (!nextPageIsNull && !loading) {
+            setLoadingHistory(true)
+            setCurrentPage(currentPage + 1);
+          }
+        }
+      
+        const loadingCircleStyle = () => {
+          return {
+              opacity: + loading,
+              width: '100%',
+              height: 30,
+              alignItems:'center',
+              justifyContent:'center'
+          }
+        }
   
   return (
     <View style = {{flex:1, backgroundColor: '#172136', justifyContent: 'flex-start'}}>
@@ -300,12 +393,16 @@ function BattleHistory(props) {
           <Text style={{ color: '#fff', fontSize: 20, textAlign: 'center', fontWeight: '600', fontFamily: 'SftBold' }}>{data.title}</Text>
         </View>
       </View>
+      
       <View
-        style={{ flex: 1 }}
+        style={{ flexGrow: 1 }}
       >
+        
         <View
             style={{ width: SCREEN_WIDTH, height: SCREEN_HEIGHT - headerHeight, position: 'absolute'  }}
         >
+          
+          
             <View
                 style={{ width: "100%", height: '100%', backgroundColor: '#172136',
                      position: 'absolute', zIndex: 10, opacity: 0.5 }}
@@ -316,15 +413,40 @@ function BattleHistory(props) {
                 source={tekkenBg}
             />
         </View>
-        
-        <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={{ paddingBottom: 30 }}
+        <View
+          style={{ zIndex: 10000, flex: 1, }}
         >
-        </ScrollView>
+        <FlashList
+          ref={flatListRef}
+          keyboardShouldPersistTaps='handled'
+          estimatedItemSize={68}
+          data={historyData}
+          renderItem = {renderHistoryData}
+          inverted={true}
+          keyExtractor = {keyExtractor}
+          // initialNumToRender = {data.length}
+          initialNumToRender={20}
+          // windowSize = {data.length > 0 ? data.length : 30}
+          // windowSize = {1}
+          ListFooterComponent = {renderLoader}
+          // onContentSizeChange={(width, height) => {
+          //   flatListRef.current.scrollToOffset({
+          //     offset: 0,
+          //     animated: true
+          //   })
+          // }}
+          showsVerticalScrollIndicator={false}
+          onEndReached={LoadMoreItem}
+          onEndReachedThreshold={0.8}
+          removeClippedSubviews={true}
+          contentContainerStyle={{ paddingTop: 50}}
+          style={{}}
+        />
+        </View>
       </View>
+      
       {!queue && <View
-        style={{ flexGrow: 1, justifyContent: 'flex-end', paddingBottom: 20, width: '100%', zIndex: 100 }}
+        style={{  justifyContent: 'flex-end', marginBottom: 20, width: '100%', zIndex: 100 }}
       >
         <TouchableOpacity
             style={[{ backgroundColor: '#6083FF', borderRadius: 12, paddingVertical: 15, paddingHorizontal: 25, margin: 10, marginBottom: 25, marginTop: 0,
@@ -340,7 +462,8 @@ function BattleHistory(props) {
       </View>}
 
       {queue && !loading && <View
-        style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 10, zIndex: 100 }}
+        style={{ justifyContent: 'center', alignItems: 'center', paddingHorizontal: 10,
+                 marginBottom: 30, zIndex: 100 }}
         >
             <Text
                 style={{ textAlign: 'center', color: '#fff', fontSize: 22, fontFamily: 'SftBold' }}
@@ -352,7 +475,7 @@ function BattleHistory(props) {
             'Когда мы найдем игрока, вы получите уведомление. А пока что можете продолжить использовать другие функции приложения.'}</Text>
             <TouchableOpacity
                 style={[{ backgroundColor: '#6083FF', borderRadius: 12, paddingVertical: 15, paddingHorizontal: 25,
-                margin: 10, marginVertical: 18, position: 'absolute', bottom: 30,
+                margin: 10, marginVertical: 18,
                 shadowColor: '#6083FF', shadowOffset: {width: 0, height: 0}, shadowOpacity: 0.4, shadowRadius: 7 }, 
                 Platform.OS === 'android' && {elevation: 2}]}
                 activeOpacity={0.8}
@@ -515,6 +638,13 @@ const styles = StyleSheet.create({
       borderTopColor: 'rgba(62, 69, 85, 0.6)',
       borderRadius: 0
     },
+    dateStyleMessages: {
+    textAlign: 'center',
+    fontSize: 17,
+    margin: 20,
+    color: '#0aa',
+    fontFamily: 'SftMedium'
+  }
 })
 
 export default BattleHistory

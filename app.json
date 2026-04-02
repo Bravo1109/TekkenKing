@@ -26,7 +26,10 @@
       "supportsTablet": true,
       "icon": "./assets/redpill.jpeg",
       "bundleIdentifier": "redpillios",
-      "buildNumber": "1"
+      "buildNumber": "1",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "googleServicesFile": "./google-services.json",
@@ -63,7 +66,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "eb80c1d5-5e39-491b-b5d2-905bbf11b3f2"
+        "projectId": "0ad94244-7d59-453c-9475-c44af1de63a4"
       }
     }
   }
